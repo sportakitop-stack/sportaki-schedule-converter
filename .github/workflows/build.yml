@@ -1,0 +1,39 @@
+name: Build binaries
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+      - name: Build EXE
+        run: pyinstaller --onefile --windowed --name SportakiScheduleConverter sportaki_schedule_converter.py
+      - name: Upload artifact (Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SportakiScheduleConverter-Windows
+          path: dist/SportakiScheduleConverter.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+      - name: Build Linux binary
+        run: pyinstaller --onefile --windowed --name SportakiScheduleConverter sportaki_schedule_converter.py
+      - name: Upload artifact (Linux)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SportakiScheduleConverter-Linux
+          path: dist/SportakiScheduleConverter
